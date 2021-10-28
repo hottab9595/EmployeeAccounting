@@ -1,15 +1,16 @@
+using AutoMapper;
+using EmployeeAccounting.Db;
+using EmployeeAccounting.Db.Core;
+using EmployeeAccounting.Db.Interfaces;
+using EmployeeAccounting.Services;
+using EmployeeAccounting.Services.Interfaces;
+using EmployeeAccounting.UI.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmployeeAccounting
 {
@@ -26,6 +27,22 @@ namespace EmployeeAccounting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IContext, Context>();
+            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<ICoreCrud<BaseModel>>()
+                .AddClasses(classes => classes.AssignableTo<ICoreService>())
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+            );
+
+            services.AddSingleton(new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            }).CreateMapper());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
