@@ -32,6 +32,8 @@ namespace EmployeeAccounting.Controllers
         [HttpGet]
         public IEnumerable<Employee> Get()
         {
+            int lol = 1;
+            lol = 2;
             return _db.Employees;
         }
     }
