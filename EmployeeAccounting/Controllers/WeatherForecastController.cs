@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmployeeAccounting.Db;
+using EmployeeAccounting.Db.Model;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -18,22 +21,18 @@ namespace EmployeeAccounting.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, Context db)
         {
             _logger = logger;
+            this._db = db;
         }
 
+        private Context _db;
+
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<Employee> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            return _db.Employees;
         }
     }
 }
