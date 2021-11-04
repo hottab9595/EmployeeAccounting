@@ -23,9 +23,9 @@ namespace EmployeeAccounting.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
-            var lol = _db.Departments.ToList();
+           // var lol = _db.Departments.ToList();
             return  _db.Departments.ToList();
-            return await _db.Departments.ToListAsync();
+            //return await _db.Departments.ToListAsync();
         }
 
         [HttpGet("{id}")]
