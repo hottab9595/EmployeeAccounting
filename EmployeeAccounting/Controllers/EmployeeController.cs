@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EmployeeAccounting.Db;
-using EmployeeAccounting.Db.Model;
-using Microsoft.EntityFrameworkCore;
+using EmployeeAccounting.Db.Interfaces;
+using EmployeeAccounting.Services.Core;
+using EmployeeAccounting.Services.Interfaces;
+using EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -13,89 +14,94 @@ namespace EmployeeAccounting.Controllers
     [Route("api/[controller]")]
     public class EmployeeController : Controller
     {
-        public EmployeeController(Context db)
+        public EmployeeController(IEmployeeService es)
         {
-            this._db = db;
+            //this._db = db;
+            this._es = es;
         }
 
-        private Context _db;
+        private IUnitOfWork _db;
+        private IEmployeeService _es;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
-        {
-            return await _db.Employees.ToListAsync();
+        public ActionResult<Task<IEnumerable<Employee>>> GetEmployees()
+        { 
+            //_es.GetEmployee()
+            //var lol = _db.Employees.GetAsync();
+            return null;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetSpecificEmployee(int id)
+        public Employee GetSpecificEmployee(int id)
         {
-            Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            //Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
+            //if (employee == null)
+            //{
+            //    return NotFound();
+            //}
+            
 
-            return employee;
-        }
-        
-        [HttpPost]
-        public async Task<ActionResult<Employee>> AddNewEmployee(Employee employee)
-        {
-            if (employee == null)
-            {
-                return BadRequest();
-            }
-
-            _db.Employees.Add(employee);
-            await _db.SaveChangesAsync();
-            return Ok(employee);
+            return _es.GetEmployee(id); 
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Employee>> UpdateEmployee(Employee employee)
-        {
-            if (employee == null)
-            {
-                return BadRequest();
-            }
-            if (!_db.Employees.Any(e => e.ID == employee.ID))
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //public async Task<ActionResult<Employee>> AddNewEmployee(Employee employee)
+        //{
+        //    if (employee == null)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _db.Update(employee);
-            await _db.SaveChangesAsync();
-            return Ok(employee);
-        }
+        //    _db.Employees.Add(employee);
+        //    await _db.SaveChangesAsync();
+        //    return Ok(employee);
+        //}
 
-        [HttpPut("Delete/{id}")]
-        public async Task<ActionResult<Employee>> DeletEmployee(int id)
-        {
-            Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
+        //[HttpPut]
+        //public async Task<ActionResult<Employee>> UpdateEmployee(Employee employee)
+        //{
+        //    if (employee == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    if (!_db.Employees.Any(e => e.ID == employee.ID))
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (employee == null)
-            {
-                return NotFound();
-            }
+        //    _db.Update(employee);
+        //    await _db.SaveChangesAsync();
+        //    return Ok(employee);
+        //}
 
-            employee.IsDeleted = true;
+        //[HttpPut("Delete/{id}")]
+        //public async Task<ActionResult<Employee>> DeletEmployee(int id)
+        //{
+        //    Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
 
-            _db.Update(employee);
-            await _db.SaveChangesAsync();
-            return Ok(employee);
-        }
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Employee>> FullDeleteEmployee(int id)
-        {
-            Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            _db.Employees.Remove(employee);
-            await _db.SaveChangesAsync();
-            return Ok(employee);
-        }
+        //    employee.IsDeleted = true;
+
+        //    _db.Update(employee);
+        //    await _db.SaveChangesAsync();
+        //    return Ok(employee);
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<Employee>> FullDeleteEmployee(int id)
+        //{
+        //    Employee employee = _db.Employees.FirstOrDefault(e => e.ID == id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _db.Employees.Remove(employee);
+        //    await _db.SaveChangesAsync();
+        //    return Ok(employee);
+        //}
     }
 }

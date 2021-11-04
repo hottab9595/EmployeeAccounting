@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Db.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting.Db
 {
-    public class Context : DbContext
+    public class Context : DbContext, IContext
     {
 
         public Context()

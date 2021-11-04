@@ -11,6 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db;
+using EmployeeAccounting.Db.Core;
+using EmployeeAccounting.Db.Interfaces;
+using EmployeeAccounting.Services.Core;
+using EmployeeAccounting.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting
@@ -28,7 +32,11 @@ namespace EmployeeAccounting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IContext, Context>();
             services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
