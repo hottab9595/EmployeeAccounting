@@ -15,9 +15,9 @@ namespace EmployeeAccounting.Db.Core
             _dbSet = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAsync()
+        public async Task<IQueryable<T>> GetAsync()
         {
-            return await Task.Run(() => _dbSet.AsEnumerable());
+            return await Task.Run(() => _dbSet.AsQueryable());
         }
 
         public async Task<T> GetAsync(int id)
@@ -25,28 +25,33 @@ namespace EmployeeAccounting.Db.Core
             return await _dbSet.FindAsync(id);
         }
 
-        public async void AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
+            return entity;
         }
 
-        public async void UpdateAsync(T entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             await Task.Run(() => _dbSet.Update(entity));
+            return entity;
         }
 
-        public async void UpdateAsync(int id)
+        public async Task<T> UpdateAsync(int id)
         {
             Task<T> item = GetAsync(id);
             if (item.Result != null)
             {
                await Task.Run(() => _dbSet.Update(item.Result));
+               return await _dbSet.FindAsync(id);
             }
+
+            return null;
         }
 
         public async void DeleteAsync()
         {
-            Task<IEnumerable<T>> items = GetAsync();
+            Task<IQueryable<T>> items = GetAsync();
             if (items.Result.Any())
             {
                 await Task.Run(() => _dbSet.RemoveRange(items.Result));
