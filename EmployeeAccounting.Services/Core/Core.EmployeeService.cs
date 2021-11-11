@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
 
@@ -16,76 +15,41 @@ namespace EmployeeAccounting.Services.Core
 
         }
 
-        #region Interfaces realisation
+        #region Interfaces realization
 
-        public async Task<IEnumerable<UIModel.Employee>> GetEmployeesAsync()
+        public async Task<IEnumerable<UIModel.Employee>> GetEmployeesAsync() => await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
+            .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
+
+        public async Task<UIModel.Employee> GetEmployeeAsync(int id) => await Task.Run(() => CreateUiEmployeeByDbEmployeeAsync(_db.Employees.GetAsync(id).Result));
+
+        public async Task<UIModel.Employee> AddNewEmployeeAsync(UIModel.Employee employee) => await Task.Run(async () =>
         {
-            List<UIModel.Employee> employees = new List<UIModel.Employee>();
-
-            await Task.Run(() =>
-            {
-                IEnumerable<DbModel.Employee> employeesDb = _db.Employees.GetAsync().Result.Include(x => x.Department).AsEnumerable();
-
-                foreach (DbModel.Employee employeeDb in employeesDb)
-                {
-                    employees.Add(CreateUiEmployeeByDbEmployee(employeeDb));
-                }
-            });
-
-            return employees;
-        }
-
-        public async Task<UIModel.Employee> GetEmployeeAsync(int id)
-        {
-            await Task.Run(() =>
-            {
-                DbModel.Employee employeeDb = _db.Employees.GetAsync(id).Result;
-
-                if (employeeDb != null)
-                {
-                    return CreateUiEmployeeByDbEmployee(employeeDb); ;
-                }
-
-                return null;
-            });
-
-            return null;
-        }
-
-        public async Task<UIModel.Employee> AddNewEmployeeAsync(UIModel.Employee employee)
-        {
-            DbModel.Employee employeeDb = _db.Employees.GetAsync(employee.ID).Result;
-
-            if (employeeDb == null)
-            {
-                DbModel.Employee newEmployeeDb = _db.Employees.AddAsync(CreateDbEmployeeByUiEmployee(employee)).Result;
-
-                await _db.SaveAsync();
-                return CreateUiEmployeeByDbEmployee(newEmployeeDb);
-            };
-
-            return null;
-        }
+            DbModel.Employee employeeDb = await _db.Employees.AddAsync(CreateDbEmployeeByUiEmployee(employee));
+            await _db.SaveAsync();
+            return await CreateUiEmployeeByDbEmployeeAsync(employeeDb);
+        });
 
         public async Task<UIModel.Employee> UpdateEmployeeAsync(int id, UIModel.Employee employee)
         {
-            DbModel.Employee employeeDb = _db.Employees.GetAsync(id).Result;
-
-            if (employeeDb != null)
+            return await Task.Run(async () =>
             {
-                employeeDb.Surname = employee.Surname;
-                employeeDb.Name = employee.Name;
-                employeeDb.Patronymic = employee.Patronymic;
-                employeeDb.IsDeleted = employee.IsDeleted;
-                employeeDb.DepartmentID = employee.DepartmentID;
+                DbModel.Employee employeeDb = await _db.Employees.GetAsync(id);
 
-                DbModel.Employee updatedEmployeeDb = await _db.Employees.UpdateAsync(employeeDb);
-                await _db.SaveAsync();
+                if (employeeDb != null)
+                {
+                    employeeDb.Surname = employee.Surname;
+                    employeeDb.Name = employee.Name;
+                    employeeDb.Patronymic = employee.Patronymic;
+                    employeeDb.IsDeleted = employee.IsDeleted;
+                    employeeDb.DepartmentID = employee.DepartmentID;
 
-                return CreateUiEmployeeByDbEmployee(updatedEmployeeDb);
-            }
+                    await _db.Employees.UpdateAsync(employeeDb);
+                    await _db.SaveAsync();
+                    return await CreateUiEmployeeByDbEmployeeAsync(employeeDb);
+                }
 
-            return null;
+                return employee;
+            });
         }
 
         public async Task DeleteAsync(int id)
@@ -100,10 +64,7 @@ namespace EmployeeAccounting.Services.Core
             }
         }
 
-        public async Task DeleteAsync(UIModel.Employee employee)
-        {
-            await DeleteAsync(employee.ID);
-        }
+        public async Task DeleteAsync(UIModel.Employee employee) => await DeleteAsync(employee.ID);
 
         public async Task FullDeleteAsync(int id)
         {
@@ -120,7 +81,7 @@ namespace EmployeeAccounting.Services.Core
 
         #region Helpers
 
-        private UIModel.Employee CreateUiEmployeeByDbEmployee(DbModel.Employee employeeDb)
+        private async Task<UIModel.Employee> CreateUiEmployeeByDbEmployeeAsync(DbModel.Employee employeeDb)
         {
             return new UIModel.Employee
             {
@@ -130,7 +91,11 @@ namespace EmployeeAccounting.Services.Core
                 Patronymic = employeeDb.Patronymic,
                 IsDeleted = employeeDb.IsDeleted,
                 DepartmentID = employeeDb.DepartmentID,
-                DepartmentSignature = employeeDb.Department.Signature
+                DepartmentSignature = employeeDb.Department?.Signature ?? await Task.Run(async () =>
+                {
+                    DbModel.Department departmentDb = await _db.Departments.GetAsync(employeeDb.DepartmentID);
+                    return departmentDb.Signature;
+                })
             };
         }
 
@@ -147,7 +112,6 @@ namespace EmployeeAccounting.Services.Core
         }
 
         #endregion
-
-
+        
     }
 }

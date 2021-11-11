@@ -13,8 +13,8 @@ namespace EmployeeAccounting.Db.Model
         [ForeignKey("Department")]
         public int? ParentID { get; set; }
         public bool IsDeleted { get; set; }
-        public Department Parent { get; set; }
-        public List<Employee> Employees { get; set; } = new List<Employee>();
-        public List<Department> Departments { get; set; } = new List<Department>();
+        public virtual Department Parent { get; set; }
+        public virtual ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Department> Departments { get; set; }
     }
 }

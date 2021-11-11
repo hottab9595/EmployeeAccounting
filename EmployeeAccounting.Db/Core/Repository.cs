@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EmployeeAccounting.Db.Core
 {
@@ -39,10 +40,10 @@ namespace EmployeeAccounting.Db.Core
 
         public async Task<T> UpdateAsync(int id)
         {
-            Task<T> item = GetAsync(id);
-            if (item.Result != null)
+            T item = await GetAsync(id);
+            if (item != null)
             {
-               await Task.Run(() => _dbSet.Update(item.Result));
+               await Task.Run(() => _dbSet.Update(item));
                return await _dbSet.FindAsync(id);
             }
 
@@ -51,10 +52,10 @@ namespace EmployeeAccounting.Db.Core
 
         public async void DeleteAsync()
         {
-            Task<IQueryable<T>> items = GetAsync();
-            if (items.Result.Any())
+            IQueryable<T> items = await GetAsync();
+            if (items.Any())
             {
-                await Task.Run(() => _dbSet.RemoveRange(items.Result));
+                await Task.Run(() => _dbSet.RemoveRange(items));
             }
         }
 
@@ -65,10 +66,10 @@ namespace EmployeeAccounting.Db.Core
 
         public async void DeleteAsync(int id)
         {
-            Task<T> item = GetAsync(id);
-            if (item.Result != null)
+            T item = await GetAsync(id);
+            if (item != null)
             {
-                await Task.Run(() => _dbSet.Remove(item.Result));
+                await Task.Run(() => _dbSet.Remove(item));
             }
         }
     }

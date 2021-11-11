@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using EmployeeAccounting.Db;
-using EmployeeAccounting.Db.Model;
-using Microsoft.EntityFrameworkCore;
+using EmployeeAccounting.UI.Model;
+using EmployeeAccounting.Services.Interfaces;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -13,91 +9,49 @@ namespace EmployeeAccounting.Controllers
     [Route("api/[controller]")]
     public class DepartmentController : Controller
     {
-        public DepartmentController(Context db)
+        public DepartmentController(IDepartmentService ds)
         {
-            this._db = db;
+            this._ds = ds;
         }
 
-        private Context _db;
+        private IDepartmentService _ds;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+        public async Task<IActionResult> GetDepartments()
         {
-            return  _db.Departments.ToList();
+            return Ok(await _ds.GetDepartmentsAsync());
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> GetSpecificDepartment(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetSpecificDepartment(int id)
         {
-            Department department = _db.Departments.FirstOrDefault(e => e.ID == id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-
-            return department;
+            return Ok(await _ds.GetDepartmentAsync(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Department>> AddDepartment(Department department)
+        public async Task<IActionResult> AddDepartment(Department department)
         {
-            if (department == null)
-            {
-                return BadRequest();
-            }
-
-            _db.Departments.Add(department);
-            await _db.SaveChangesAsync();
-            return Ok(department);
+            return Ok(await _ds.AddNewDepartmentAsync(department));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<Department>> UpdateDepartment(Department department)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateDepartment(int id, Department department)
         {
-            if (department == null)
-            {
-                return BadRequest();
-            }
-            if (!_db.Departments.Any(e => e.ID == department.ID))
-            {
-                return NotFound();
-            }
-
-            _db.Update(department);
-            await _db.SaveChangesAsync();
-            return Ok(department);
+            return Ok(await _ds.UpdateDepartmentAsync(id, department));
         }
 
-        [HttpPut("Delete/{id}")]
-        public async Task<ActionResult<Department>> DeleteDepartment(int id)
+        [HttpPut("Delete/{id:int}")]
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            Department department = _db.Departments.FirstOrDefault(e => e.ID == id);
-
-            if (department == null)
-            {
-                return NotFound();
-            }
-
-            department.IsDeleted = true;
-
-            _db.Update(department);
-            await _db.SaveChangesAsync();
-            return Ok(department);
+            await _ds.DeleteAsync(id);
+            return Ok();
         }
-
-       
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Department>> FullDeleteDepartment(int id)
+        
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> FullDeleteDepartment(int id)
         {
-            Department department = _db.Departments.FirstOrDefault(e => e.ID == id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-            _db.Departments.Remove(department);
-            await _db.SaveChangesAsync();
-            return Ok(department);
+            await _ds.FullDeleteAsync(id);
+            return Ok();
         }
     }
 }
