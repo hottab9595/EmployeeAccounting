@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace EmployeeAccounting.Db.Model
 {
-    public class Department
+    public class Department : BaseModel
     {
-        [Key]
-        public int ID { get; set; }
         public string Signature { get; set; }
 
         [ForeignKey("Department")]

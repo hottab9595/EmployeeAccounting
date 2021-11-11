@@ -2,9 +2,8 @@
 
 namespace EmployeeAccounting.UI.Model
 {
-    public class Department
+    public class Department : BaseModel
     {
-        public int ID { get; set; }
         public string Signature { get; set; }
         public int? ParentID { get; set; }
         public bool IsDeleted { get; set; }

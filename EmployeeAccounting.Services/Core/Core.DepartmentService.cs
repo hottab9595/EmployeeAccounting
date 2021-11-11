@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
-using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
 
 namespace EmployeeAccounting.Services.Core
 {
-    public class DepartmentService : CoreService, IDepartmentService
+    public class DepartmentService : CoreService<UIModel.Department>
     {
         public DepartmentService(IUnitOfWork db) : base(db)
         {
@@ -19,18 +18,18 @@ namespace EmployeeAccounting.Services.Core
 
         #region Interfaces realization
 
-        public async Task<IEnumerable<UIModel.Department>> GetDepartmentsAsync() => await Task.Run(() => _db.Departments.GetAsync().Result.AsEnumerable().Select(CreateUiDepartmentByDbDepartment));
+        public async Task<IEnumerable<UIModel.Department>> GetAsync() => await Task.Run(() => _db.Departments.GetAsync().Result.AsEnumerable().Select(CreateUiDepartmentByDbDepartment));
 
-        public async Task<UIModel.Department> GetDepartmentAsync(int id) => await Task.Run(() => CreateUiDepartmentByDbDepartment(_db.Departments.GetAsync(id).Result));
+        public async Task<UIModel.Department> GetAsync(int id) => await Task.Run(() => CreateUiDepartmentByDbDepartment(_db.Departments.GetAsync(id).Result));
 
-        public async Task<UIModel.Department> AddNewDepartmentAsync(UIModel.Department department) => await Task.Run(async () =>
+        public async Task<UIModel.Department> AddNewAsync(UIModel.Department department) => await Task.Run(async () =>
             {
                 DbModel.Department departmentDb = await _db.Departments.AddAsync(CreateDbDepartmentByUiDepartment(department));
                 await _db.SaveAsync();
                 return CreateUiDepartmentByDbDepartment(departmentDb);
             });
 
-        public async Task<UIModel.Department> UpdateDepartmentAsync(int id, UIModel.Department department)
+        public async Task<UIModel.Department> UpdateAsync(int id, UIModel.Department department)
         {
             return await Task.Run(async () =>
             {
@@ -63,8 +62,6 @@ namespace EmployeeAccounting.Services.Core
             }
         }
 
-        public async Task DeleteAsync(UIModel.Department department) => await DeleteAsync(department.ID);
-
         public async Task FullDeleteAsync(int id)
         {
             if (await _db.Departments.GetAsync(id) != null)
@@ -80,7 +77,7 @@ namespace EmployeeAccounting.Services.Core
 
         private UIModel.Department CreateUiDepartmentByDbDepartment(DbModel.Department departmentDb)
         {
-            return new UIModel.Department
+            return departmentDb == null ? null : new UIModel.Department
             {
                 ID = departmentDb.ID,
                 Signature = departmentDb.Signature,
@@ -101,7 +98,7 @@ namespace EmployeeAccounting.Services.Core
 
         private DbModel.Department CreateDbDepartmentByUiDepartment(UIModel.Department employeeUi)
         {
-            return new DbModel.Department
+            return employeeUi == null ? null : new DbModel.Department
             {
                 Signature = employeeUi?.Signature,
                 ParentID = employeeUi?.ParentID,

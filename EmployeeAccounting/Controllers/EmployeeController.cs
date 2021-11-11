@@ -9,35 +9,35 @@ namespace EmployeeAccounting.Controllers
     [Route("api/[controller]")]
     public class EmployeeController : Controller
     {
-        public EmployeeController(IEmployeeService es)
+        public EmployeeController(ICoreService<Employee> es)
         {
             this._es = es;
         }
         
-        private IEmployeeService _es;
+        private ICoreService<Employee> _es;
 
         [HttpGet]
         public async Task<IActionResult> GetEmployees()
         {
-            return Ok(await _es.GetEmployeesAsync());
+            return Ok(await _es.GetAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetSpecificEmployee(int id)
         {
-            return Ok(await _es.GetEmployeeAsync(id));
+            return Ok(await _es.GetAsync(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddNewEmployee(Employee employee)
         {
-            return Ok(await _es.AddNewEmployeeAsync(employee));
+            return Ok(await _es.AddNewAsync(employee));
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateEmployee(int id, Employee employee)
         {
-            return Ok(await _es.UpdateEmployeeAsync(id, employee));
+            return Ok(await _es.UpdateAsync(id, employee));
         }
 
         [HttpPut("Delete/{id:int}")]

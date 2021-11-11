@@ -9,35 +9,35 @@ namespace EmployeeAccounting.Controllers
     [Route("api/[controller]")]
     public class DepartmentController : Controller
     {
-        public DepartmentController(IDepartmentService ds)
+        public DepartmentController(ICoreService<Department> ds)
         {
             this._ds = ds;
         }
 
-        private IDepartmentService _ds;
+        private ICoreService<Department> _ds;
 
         [HttpGet]
         public async Task<IActionResult> GetDepartments()
         {
-            return Ok(await _ds.GetDepartmentsAsync());
+            return Ok(await _ds.GetAsync());
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetSpecificDepartment(int id)
         {
-            return Ok(await _ds.GetDepartmentAsync(id));
+            return Ok(await _ds.GetAsync(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddDepartment(Department department)
         {
-            return Ok(await _ds.AddNewDepartmentAsync(department));
+            return Ok(await _ds.AddNewAsync(department));
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateDepartment(int id, Department department)
         {
-            return Ok(await _ds.UpdateDepartmentAsync(id, department));
+            return Ok(await _ds.UpdateAsync(id, department));
         }
 
         [HttpPut("Delete/{id:int}")]

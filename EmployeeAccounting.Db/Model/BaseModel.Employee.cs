@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeAccounting.Db.Model
 {
-    public class Employee
+    public class Employee : BaseModel
     {
-        [Key]
-        public int ID { get; set; }
         public string Surname { get; set; }
         public string Name { get; set; }
         public string Patronymic { get; set; }

@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
-using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
 
 namespace EmployeeAccounting.Services.Core
 {
-    public class EmployeeService : CoreService, IEmployeeService
+    public class EmployeeService : CoreService<UIModel.Employee>
     {
         public EmployeeService(IUnitOfWork db) : base(db)
         {
@@ -17,19 +16,53 @@ namespace EmployeeAccounting.Services.Core
 
         #region Interfaces realization
 
-        public async Task<IEnumerable<UIModel.Employee>> GetEmployeesAsync() => await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
-            .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
+        //public async Task<IEnumerable<UIModel.Employee>> GetAsync() => await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
+        //    .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
 
-        public async Task<UIModel.Employee> GetEmployeeAsync(int id) => await Task.Run(() => CreateUiEmployeeByDbEmployeeAsync(_db.Employees.GetAsync(id).Result));
+        public async Task<IEnumerable<UIModel.Employee>> GetAsync()
+        {
+            await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
+                .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
 
-        public async Task<UIModel.Employee> AddNewEmployeeAsync(UIModel.Employee employee) => await Task.Run(async () =>
+            var employeeDb = _db.Employees.GetAsync().Result.AsEnumerable();
+            var lol = new List<UIModel.Employee>();
+            foreach (var result in employeeDb)
+            {
+                lol.Add(new UIModel.Employee
+                {
+                    ID = result.ID,
+                    Surname = result.Surname,
+                    Name = result.Name,
+                    Patronymic = result.Patronymic,
+                    IsDeleted = result.IsDeleted,
+                    DepartmentID = result.DepartmentID,
+                    DepartmentSignature = result.Department.Signature
+                });
+            }
+
+            return lol;
+            //return new UIModel.Employee
+            //{
+            //    ID = employeeDb.ID,
+            //    Surname = employeeDb.Surname,
+            //    Name = employeeDb.Name,
+            //    Patronymic = employeeDb.Patronymic,
+            //    IsDeleted = employeeDb.IsDeleted,
+            //    DepartmentID = employeeDb.DepartmentID,
+            //    DepartmentSignature = employeeDb.Department.Signature
+            //};
+        }
+
+        public async Task<UIModel.Employee> GetAsync(int id) => await Task.Run(() => CreateUiEmployeeByDbEmployeeAsync(_db.Employees.GetAsync(id).Result));
+
+        public async Task<UIModel.Employee> AddNewAsync(UIModel.Employee employee) => await Task.Run(async () =>
         {
             DbModel.Employee employeeDb = await _db.Employees.AddAsync(CreateDbEmployeeByUiEmployee(employee));
             await _db.SaveAsync();
             return await CreateUiEmployeeByDbEmployeeAsync(employeeDb);
         });
 
-        public async Task<UIModel.Employee> UpdateEmployeeAsync(int id, UIModel.Employee employee)
+        public async Task<UIModel.Employee> UpdateAsync(int id, UIModel.Employee employee)
         {
             return await Task.Run(async () =>
             {
@@ -63,8 +96,7 @@ namespace EmployeeAccounting.Services.Core
                 await _db.SaveAsync();
             }
         }
-
-        public async Task DeleteAsync(UIModel.Employee employee) => await DeleteAsync(employee.ID);
+        
 
         public async Task FullDeleteAsync(int id)
         {
@@ -83,7 +115,7 @@ namespace EmployeeAccounting.Services.Core
 
         private async Task<UIModel.Employee> CreateUiEmployeeByDbEmployeeAsync(DbModel.Employee employeeDb)
         {
-            return new UIModel.Employee
+            return employeeDb == null ? null : new UIModel.Employee
             {
                 ID = employeeDb.ID,
                 Surname = employeeDb.Surname,
@@ -101,7 +133,7 @@ namespace EmployeeAccounting.Services.Core
 
         private DbModel.Employee CreateDbEmployeeByUiEmployee(UIModel.Employee employeeUi)
         {
-            return new DbModel.Employee
+            return employeeUi == null ? null : new DbModel.Employee
             {
                 Surname = employeeUi.Surname,
                 Name = employeeUi.Name,
