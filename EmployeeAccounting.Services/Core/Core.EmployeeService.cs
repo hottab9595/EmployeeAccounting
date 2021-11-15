@@ -2,56 +2,30 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
+using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting.Services.Core
 {
-    public class EmployeeService : CoreService<UIModel.Employee>
+    public class EmployeeService<T> : CoreService<T>, IEmployeeService<UIModel.Employee> where T : UIModel.BaseModel
     {
         public EmployeeService(IUnitOfWork db) : base(db)
         {
-
         }
 
         #region Interfaces realization
 
-        //public async Task<IEnumerable<UIModel.Employee>> GetAsync() => await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
-        //    .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
+        public async Task<IEnumerable<UIModel.Employee>> GetAsync() => await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
+            .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
 
-        public async Task<IEnumerable<UIModel.Employee>> GetAsync()
-        {
-            await Task.Run(() => _db.Employees.GetAsync().Result.AsEnumerable()
-                .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
-
-            var employeeDb = _db.Employees.GetAsync().Result.AsEnumerable();
-            var lol = new List<UIModel.Employee>();
-            foreach (var result in employeeDb)
-            {
-                lol.Add(new UIModel.Employee
-                {
-                    ID = result.ID,
-                    Surname = result.Surname,
-                    Name = result.Name,
-                    Patronymic = result.Patronymic,
-                    IsDeleted = result.IsDeleted,
-                    DepartmentID = result.DepartmentID,
-                    DepartmentSignature = result.Department.Signature
-                });
-            }
-
-            return lol;
-            //return new UIModel.Employee
-            //{
-            //    ID = employeeDb.ID,
-            //    Surname = employeeDb.Surname,
-            //    Name = employeeDb.Name,
-            //    Patronymic = employeeDb.Patronymic,
-            //    IsDeleted = employeeDb.IsDeleted,
-            //    DepartmentID = employeeDb.DepartmentID,
-            //    DepartmentSignature = employeeDb.Department.Signature
-            //};
-        }
+        //public async Task<IEnumerable<UIModel.Employee>> GetAsync()
+        //{
+        //    var lol = await _db.Employees.Get().Select()
+        //    var employees = (await _db.Employees.GetAsync()).ToListAsync();
+        //    await Task.Run(() => _db.Employees.GetAsync());
+        //} 
 
         public async Task<UIModel.Employee> GetAsync(int id) => await Task.Run(() => CreateUiEmployeeByDbEmployeeAsync(_db.Employees.GetAsync(id).Result));
 
@@ -87,7 +61,7 @@ namespace EmployeeAccounting.Services.Core
 
         public async Task DeleteAsync(int id)
         {
-            DbModel.Employee employeeDb = _db.Employees.GetAsync(id).Result;
+            DbModel.Employee employeeDb = await _db.Employees.GetAsync(id);
 
             if (employeeDb != null)
             {
@@ -96,11 +70,16 @@ namespace EmployeeAccounting.Services.Core
                 await _db.SaveAsync();
             }
         }
-        
+
+        public Task DeleteAsync(UIModel.Employee t)
+        {
+            throw new System.NotImplementedException();
+        }
+
 
         public async Task FullDeleteAsync(int id)
         {
-            DbModel.Employee employeeDb = _db.Employees.GetAsync(id).Result;
+            DbModel.Employee employeeDb = await _db.Employees.GetAsync(id);
 
             if (employeeDb != null)
             {

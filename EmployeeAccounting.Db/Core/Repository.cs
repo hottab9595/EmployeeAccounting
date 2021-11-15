@@ -21,6 +21,12 @@ namespace EmployeeAccounting.Db.Core
             return await Task.Run(() => _dbSet.AsQueryable());
         }
 
+        public IQueryable<T> Get()
+        {
+            return  _dbSet.AsQueryable();
+        }
+
+
         public async Task<T> GetAsync(int id)
         {   
             return await _dbSet.FindAsync(id);

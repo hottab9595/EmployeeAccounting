@@ -1,6 +1,6 @@
 ﻿namespace EmployeeAccounting.UI.Model
 {
-    public abstract class BaseModel
+    public class BaseModel
     {
         public int ID { get; set; }
     }

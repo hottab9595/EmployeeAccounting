@@ -9,12 +9,12 @@ namespace EmployeeAccounting.Controllers
     [Route("api/[controller]")]
     public class DepartmentController : Controller
     {
-        public DepartmentController(ICoreService<Department> ds)
+        public DepartmentController(IDepartmentService<Department> ds)
         {
             this._ds = ds;
         }
 
-        private ICoreService<Department> _ds;
+        private ICoreCrud<Department> _ds;
 
         [HttpGet]
         public async Task<IActionResult> GetDepartments()

@@ -2,19 +2,17 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Db.Interfaces;
+using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
 
 namespace EmployeeAccounting.Services.Core
 {
-    public class DepartmentService : CoreService<UIModel.Department>
+    public class DepartmentService<T> : CoreService<T>, IDepartmentService<UIModel.Department> where T : UIModel.BaseModel
     {
-        public DepartmentService(IUnitOfWork db) : base(db)
+        public DepartmentService(IUnitOfWork db) :  base(db)
         {
-            this._db = db;
         }
-
-        private IUnitOfWork _db;
 
         #region Interfaces realization
 
@@ -60,6 +58,11 @@ namespace EmployeeAccounting.Services.Core
                 await _db.Departments.UpdateAsync(id);
                 await _db.SaveAsync();
             }
+        }
+
+        public Task DeleteAsync(UIModel.Department t)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task FullDeleteAsync(int id)

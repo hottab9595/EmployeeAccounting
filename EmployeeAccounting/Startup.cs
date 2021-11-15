@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +10,8 @@ using EmployeeAccounting.Db.Core;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Core;
 using EmployeeAccounting.Services.Interfaces;
+using EmployeeAccounting.UI;
+using EmployeeAccounting.UI.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting
@@ -29,7 +33,17 @@ namespace EmployeeAccounting
             services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
-            services.AddTransient(typeof(ICoreService<>), typeof(CoreService<>));
+
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<ICoreCrud<BaseModel>>()
+                .AddClasses(classes => classes.AssignableTo<ICoreService>())
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+            );
+
+            //services.AddTransient(typeof(IDepartmentService<>), typeof(DepartmentService<>));
+            //services.AddTransient(typeof(IEmployeeService<>), typeof(EmployeeService<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
