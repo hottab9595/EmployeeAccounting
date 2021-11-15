@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using EmployeeAccounting.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EmployeeAccounting.Db.Core
 {
@@ -65,7 +62,7 @@ namespace EmployeeAccounting.Db.Core
             }
         }
 
-        public async void Delete(T entity)
+        public void Delete(T entity)
         {
             _dbSet.Remove(entity);
         }

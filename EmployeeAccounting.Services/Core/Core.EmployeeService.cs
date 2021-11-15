@@ -1,39 +1,35 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting.Services.Core
 {
     public class EmployeeService<T> : CoreService<T>, IEmployeeService<UIModel.Employee> where T : UIModel.BaseModel
     {
-        public EmployeeService(IUnitOfWork db) : base(db)
+        public EmployeeService(IUnitOfWork db, IMapper mapper) : base(db)
         {
+            this._mapper = mapper;
         }
+
+        private readonly IMapper _mapper;
 
         #region Interfaces realization
 
         public async Task<IEnumerable<UIModel.Employee>> GetAsync() => await Task.Run(() => _db.Employees.GetAll().AsEnumerable()
-            .Select(x => CreateUiEmployeeByDbEmployeeAsync(x).Result));
+            .Select(_mapper.Map<UIModel.Employee>));
 
-        //public async Task<IEnumerable<UIModel.Employee>> GetAsync()
-        //{
-        //    var lol = await _db.Employees.Get().Select()
-        //    var employees = (await _db.Employees.GetAsync()).ToListAsync();
-        //    await Task.Run(() => _db.Employees.GetAsync());
-        //} 
-
-        public async Task<UIModel.Employee> GetAsync(int id) => await Task.Run(() => CreateUiEmployeeByDbEmployeeAsync(_db.Employees.Get(id)));
+        public async Task<UIModel.Employee> GetAsync(int id) => await Task.Run(() => _mapper.Map<UIModel.Employee>(_db.Employees.Get(id)));
 
         public async Task<UIModel.Employee> AddNewAsync(UIModel.Employee employee) => await Task.Run(async () =>
         {
-            DbModel.Employee employeeDb = _db.Employees.Add(CreateDbEmployeeByUiEmployee(employee));
+            DbModel.Employee employeeDb = _db.Employees.Add(_mapper.Map<DbModel.Employee>(employee));
             await _db.SaveAsync();
-            return await CreateUiEmployeeByDbEmployeeAsync(employeeDb);
+            return _mapper.Map<UIModel.Employee>(employeeDb);
         });
 
         public async Task<UIModel.Employee> UpdateAsync(int id, UIModel.Employee employee)
@@ -52,7 +48,7 @@ namespace EmployeeAccounting.Services.Core
 
                     _db.Employees.Update(employeeDb);
                     await _db.SaveAsync();
-                    return await CreateUiEmployeeByDbEmployeeAsync(employeeDb);
+                    return _mapper.Map<UIModel.Employee>(employeeDb);
                 }
 
                 return employee;
@@ -89,36 +85,5 @@ namespace EmployeeAccounting.Services.Core
         }
 
         #endregion
-
-        #region Helpers
-
-        private async Task<UIModel.Employee> CreateUiEmployeeByDbEmployeeAsync(DbModel.Employee employeeDb)
-        {
-            return employeeDb == null ? null : new UIModel.Employee
-            {
-                ID = employeeDb.ID,
-                Surname = employeeDb.Surname,
-                Name = employeeDb.Name,
-                Patronymic = employeeDb.Patronymic,
-                IsDeleted = employeeDb.IsDeleted,
-                DepartmentID = employeeDb.DepartmentID,
-                DepartmentSignature = employeeDb.Department?.Signature ?? await Task.Run(() => _db.Departments.Get(employeeDb.DepartmentID).Signature)
-            };
-        }
-
-        private DbModel.Employee CreateDbEmployeeByUiEmployee(UIModel.Employee employeeUi)
-        {
-            return employeeUi == null ? null : new DbModel.Employee
-            {
-                Surname = employeeUi.Surname,
-                Name = employeeUi.Name,
-                Patronymic = employeeUi.Patronymic,
-                IsDeleted = employeeUi.IsDeleted,
-                DepartmentID = employeeUi.DepartmentID
-            };
-        }
-
-        #endregion
-        
     }
 }

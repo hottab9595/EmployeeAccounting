@@ -1,5 +1,4 @@
-﻿using EmployeeAccounting.UI;
-using EmployeeAccounting.UI.Model;
+﻿using EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services.Interfaces
 {

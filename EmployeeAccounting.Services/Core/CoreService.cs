@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using EmployeeAccounting.Db.Interfaces;
-using EmployeeAccounting.Services.Interfaces;
+﻿using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services.Core

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EmployeeAccounting.Db.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting.Db.Interfaces
 {

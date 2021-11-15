@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
 using UIModel = EmployeeAccounting.UI.Model;
@@ -10,21 +11,24 @@ namespace EmployeeAccounting.Services.Core
 {
     public class DepartmentService<T> : CoreService<T>, IDepartmentService<UIModel.Department> where T : UIModel.BaseModel
     {
-        public DepartmentService(IUnitOfWork db) :  base(db)
+        public DepartmentService(IUnitOfWork db, IMapper mapper) :  base(db)
         {
+            this._mapper = mapper;
         }
+
+        private readonly IMapper _mapper;
 
         #region Interfaces realization
 
-        public async Task<IEnumerable<UIModel.Department>> GetAsync() => await Task.Run(() => _db.Departments.GetAll().AsEnumerable().Select(CreateUiDepartmentByDbDepartment));
+        public async Task<IEnumerable<UIModel.Department>> GetAsync() => await Task.Run(() => _db.Departments.GetAll().AsEnumerable().Select(_mapper.Map<UIModel.Department>));
 
-        public async Task<UIModel.Department> GetAsync(int id) => await Task.Run(() => CreateUiDepartmentByDbDepartment(_db.Departments.Get(id)));
+        public async Task<UIModel.Department> GetAsync(int id) => await Task.Run(() => _mapper.Map<UIModel.Department>(_db.Departments.Get(id)));
 
         public async Task<UIModel.Department> AddNewAsync(UIModel.Department department) => await Task.Run(async () =>
             {
-                DbModel.Department departmentDb = _db.Departments.Add(CreateDbDepartmentByUiDepartment(department));
+                DbModel.Department departmentDb = _db.Departments.Add(_mapper.Map<DbModel.Department>(department));
                 await _db.SaveAsync();
-                return CreateUiDepartmentByDbDepartment(departmentDb);
+                return _mapper.Map<UIModel.Department>(departmentDb);
             });
 
         public async Task<UIModel.Department> UpdateAsync(int id, UIModel.Department department)
@@ -41,7 +45,7 @@ namespace EmployeeAccounting.Services.Core
 
                     _db.Departments.Update(departmentDb);
                     await _db.SaveAsync();
-                    return CreateUiDepartmentByDbDepartment(departmentDb);
+                    return _mapper.Map<UIModel.Department>(departmentDb);
                 }
 
                 return department;
@@ -75,41 +79,5 @@ namespace EmployeeAccounting.Services.Core
         }
 
         #endregion
-
-        #region Helpers
-
-        private UIModel.Department CreateUiDepartmentByDbDepartment(DbModel.Department departmentDb)
-        {
-            return departmentDb == null ? null : new UIModel.Department
-            {
-                ID = departmentDb.ID,
-                Signature = departmentDb.Signature,
-                ParentID = departmentDb.ParentID,
-                IsDeleted = departmentDb.IsDeleted,
-                Employees = departmentDb.Employees?.Select(x => new UIModel.Employee
-                {
-                    ID = x.ID,
-                    Surname = x.Surname,
-                    Name = x.Name,
-                    Patronymic = x.Patronymic,
-                    IsDeleted = x.IsDeleted,
-                    DepartmentID = x.DepartmentID,
-                    DepartmentSignature = x.Department.Signature
-                }).ToList()
-            };
-        }
-
-        private DbModel.Department CreateDbDepartmentByUiDepartment(UIModel.Department employeeUi)
-        {
-            return employeeUi == null ? null : new DbModel.Department
-            {
-                Signature = employeeUi?.Signature,
-                ParentID = employeeUi?.ParentID,
-                IsDeleted = employeeUi?.IsDeleted ?? false
-            };
-        }
-
-        #endregion
-
     }
 }
