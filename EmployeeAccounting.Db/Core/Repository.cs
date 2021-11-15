@@ -16,66 +16,66 @@ namespace EmployeeAccounting.Db.Core
             _dbSet = context.Set<T>();
         }
 
-        public async Task<IQueryable<T>> GetAsync()
+        public IQueryable<T> GetAll()
         {
-            return await Task.Run(() => _dbSet.AsQueryable());
+            return _dbSet.AsQueryable();
         }
 
         public IQueryable<T> Get()
         {
-            return  _dbSet.AsQueryable();
+            return _dbSet.AsQueryable();
         }
 
 
-        public async Task<T> GetAsync(int id)
+        public T Get(int id)
         {   
-            return await _dbSet.FindAsync(id);
+            return _dbSet.Find(id);
         }
 
-        public async Task<T> AddAsync(T entity)
+        public T Add(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            _dbSet.Add(entity);
             return entity;
         }
 
-        public async Task<T> UpdateAsync(T entity)
+        public T Update(T entity)
         {
-            await Task.Run(() => _dbSet.Update(entity));
+            _dbSet.Update(entity);
             return entity;
         }
 
-        public async Task<T> UpdateAsync(int id)
+        public T Update(int id)
         {
-            T item = await GetAsync(id);
+            T item = Get(id);
             if (item != null)
             {
-               await Task.Run(() => _dbSet.Update(item));
-               return await _dbSet.FindAsync(id);
+               _dbSet.Update(item);
+               return _dbSet.Find(id);
             }
 
             return null;
         }
 
-        public async void DeleteAsync()
+        public void Delete()
         {
-            IQueryable<T> items = await GetAsync();
+            IQueryable<T> items = GetAll();
             if (items.Any())
             {
-                await Task.Run(() => _dbSet.RemoveRange(items));
+                _dbSet.RemoveRange(items);
             }
         }
 
-        public async void DeleteAsync(T entity)
+        public async void Delete(T entity)
         {
-            await Task.Run(() => _dbSet.Remove(entity));
+            _dbSet.Remove(entity);
         }
 
-        public async void DeleteAsync(int id)
+        public void Delete(int id)
         {
-            T item = await GetAsync(id);
+            T item = Get(id);
             if (item != null)
             {
-                await Task.Run(() => _dbSet.Remove(item));
+                _dbSet.Remove(item);
             }
         }
     }

@@ -6,14 +6,14 @@ namespace EmployeeAccounting.Db.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<IQueryable<T>> GetAsync();
+        IQueryable<T> GetAll();
         IQueryable<T> Get();
-        Task<T> GetAsync(int id);
-        Task<T> AddAsync(T entity);
-        Task<T> UpdateAsync(T entity);
-        Task<T> UpdateAsync(int id);
-        void DeleteAsync();
-        void DeleteAsync(T entity);
-        void DeleteAsync(int id);
+        T Get(int id);
+        T Add(T entity);
+        T Update(T entity);
+        T Update(int id);
+        void Delete();
+        void Delete(T entity);
+        void Delete(int id);
     }
 }
