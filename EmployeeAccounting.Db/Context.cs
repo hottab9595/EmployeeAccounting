@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using EmployeeAccounting.Db.Interfaces;
+﻿using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Db.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace EmployeeAccounting.Db
 {
@@ -10,7 +10,7 @@ namespace EmployeeAccounting.Db
 
         public Context()
         {
-            
+
         }
 
         public Context(DbContextOptions<Context> options) : base(options)
@@ -20,6 +20,7 @@ namespace EmployeeAccounting.Db
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder
@@ -81,6 +82,27 @@ namespace EmployeeAccounting.Db
                     IsDeleted = false,
                     DepartmentID = 3
                 }
+            });
+            modelBuilder.Entity<Course>().HasData(new List<Course>
+            {
+                new Course
+                {
+                    ID = 1,
+                    Signature = ".NET",
+                    Duration = 6
+                },
+                new Course
+                {
+                    ID = 2,
+                    Signature = "Java",
+                    Duration = 6
+                },
+                new Course
+                {
+                    ID = 3,
+                    Signature = "SQL",
+                    Duration = 1
+                },
             });
         }
     }

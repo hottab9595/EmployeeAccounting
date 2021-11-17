@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using EmployeeAccounting.Db.Interfaces;
+﻿using EmployeeAccounting.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace EmployeeAccounting.Db.Core
 {
@@ -25,7 +25,7 @@ namespace EmployeeAccounting.Db.Core
 
 
         public T Get(int id)
-        {   
+        {
             return _dbSet.Find(id);
         }
 
@@ -46,8 +46,8 @@ namespace EmployeeAccounting.Db.Core
             T item = Get(id);
             if (item != null)
             {
-               _dbSet.Update(item);
-               return _dbSet.Find(id);
+                _dbSet.Update(item);
+                return _dbSet.Find(id);
             }
 
             return null;

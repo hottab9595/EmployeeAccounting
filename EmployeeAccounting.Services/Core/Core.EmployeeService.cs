@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
-using UIModel = EmployeeAccounting.UI.Model;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DbModel = EmployeeAccounting.Db.Model;
+using UIModel = EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services.Core
 {

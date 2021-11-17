@@ -1,16 +1,16 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using EmployeeAccounting.Db;
 using EmployeeAccounting.Db.Core;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services;
 using EmployeeAccounting.Services.Interfaces;
 using EmployeeAccounting.UI.Model;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace EmployeeAccounting
 {
@@ -31,7 +31,7 @@ namespace EmployeeAccounting
             services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
-            
+
             services.Scan(scan => scan
                 .FromAssemblyOf<ICoreCrud<BaseModel>>()
                 .AddClasses(classes => classes.AssignableTo<ICoreService>())

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using UIModel = EmployeeAccounting.UI.Model;
 using DbModel = EmployeeAccounting.Db.Model;
+using UIModel = EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services
 {

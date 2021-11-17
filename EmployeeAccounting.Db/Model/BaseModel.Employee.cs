@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeAccounting.Db.Model
 {
@@ -12,5 +13,6 @@ namespace EmployeeAccounting.Db.Model
         [ForeignKey("Department")]
         public int DepartmentID { get; set; }
         public virtual Department Department { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
     }
 }

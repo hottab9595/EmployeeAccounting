@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
-using UIModel = EmployeeAccounting.UI.Model;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using DbModel = EmployeeAccounting.Db.Model;
+using UIModel = EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services.Core
 {
     public class DepartmentService<T> : CoreService<T>, IDepartmentService<UIModel.Department> where T : UIModel.BaseModel
     {
-        public DepartmentService(IUnitOfWork db, IMapper mapper) :  base(db)
+        public DepartmentService(IUnitOfWork db, IMapper mapper) : base(db)
         {
             this._mapper = mapper;
         }

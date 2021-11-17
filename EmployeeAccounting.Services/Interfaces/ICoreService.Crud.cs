@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using EmployeeAccounting.UI.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using EmployeeAccounting.UI;
-using EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services.Interfaces
 {

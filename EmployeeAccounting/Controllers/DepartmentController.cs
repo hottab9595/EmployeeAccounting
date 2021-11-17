@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using EmployeeAccounting.Services.Interfaces;
 using EmployeeAccounting.UI.Model;
-using EmployeeAccounting.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -46,7 +46,7 @@ namespace EmployeeAccounting.Controllers
             await _ds.DeleteAsync(id);
             return Ok();
         }
-        
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> FullDeleteDepartment(int id)
         {

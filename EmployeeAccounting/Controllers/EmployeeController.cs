@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using EmployeeAccounting.Services.Interfaces;
+﻿using EmployeeAccounting.Services.Interfaces;
 using EmployeeAccounting.UI.Model;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -13,7 +13,7 @@ namespace EmployeeAccounting.Controllers
         {
             this._es = es;
         }
-        
+
         private ICoreCrud<Employee> _es;
 
         [HttpGet]

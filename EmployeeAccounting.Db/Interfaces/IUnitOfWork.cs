@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using EmployeeAccounting.Db.Model;
+﻿using EmployeeAccounting.Db.Model;
+using System.Threading.Tasks;
 
 namespace EmployeeAccounting.Db.Interfaces
 {
-    public interface IUnitOfWork 
+    public interface IUnitOfWork
     {
-        IRepository<Employee> Employees { get;}
+        IRepository<Employee> Employees { get; }
         IRepository<Department> Departments { get; }
         Task SaveAsync();
     }

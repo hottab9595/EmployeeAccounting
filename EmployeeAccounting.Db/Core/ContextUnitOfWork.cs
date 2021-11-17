@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using EmployeeAccounting.Db.Interfaces;
+﻿using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Db.Model;
+using System;
+using System.Threading.Tasks;
 
 namespace EmployeeAccounting.Db.Core
 {
