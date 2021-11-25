@@ -18,6 +18,7 @@ namespace EmployeeAccounting.Db.Core
 
         public IRepository<Employee> Employees => GetRepository<Employee>();
         public IRepository<Department> Departments => GetRepository<Department>();
+        public IRepository<Course> Courses => GetRepository<Course>();
 
         public async Task SaveAsync() => await _db.SaveChangesAsync();
 

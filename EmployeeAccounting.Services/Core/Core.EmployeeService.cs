@@ -71,8 +71,7 @@ namespace EmployeeAccounting.Services.Core
         {
             throw new System.NotImplementedException();
         }
-
-
+        
         public async Task FullDeleteAsync(int id)
         {
             DbModel.Employee employeeDb = _db.Employees.Get(id);
@@ -84,6 +83,53 @@ namespace EmployeeAccounting.Services.Core
             }
         }
 
+        public async Task<UIModel.Employee> AddEmployeeAsync(int id, int courseId)
+        {
+            (bool isExists, DbModel.Course courseDb, DbModel.Employee employeeDb) tuple = IsExists(courseId, id);
+
+            if (tuple.isExists)
+            {
+                tuple.employeeDb.Courses.Add(tuple.courseDb);
+                _db.Employees.Update(tuple.employeeDb);
+                await _db.SaveAsync();
+
+                return await GetAsync(id);
+            }
+
+            return null;
+        }
+
+        public async Task<UIModel.Employee> RemoveEmployeeAsync(int id, int courseId)
+        {
+            (bool isExists, DbModel.Course courseDb, DbModel.Employee employeeDb) tuple = IsExists(courseId, id);
+
+            if (tuple.isExists)
+            {
+                tuple.employeeDb.Courses.Remove(tuple.courseDb);
+                _db.Employees.Update(tuple.employeeDb);
+                await _db.SaveAsync();
+
+                return await GetAsync(id);
+            }
+
+            return null;
+        }
+
         #endregion
+
+        private (bool isExists, DbModel.Course courseDb, DbModel.Employee employeeDb) IsExists(int idCourse, int idEmployee)
+        {
+            DbModel.Course courseDb = _db.Courses.Get(idCourse);
+            DbModel.Employee employeeDb = _db.Employees.Get(idEmployee);
+
+            return (isExists: courseDb != null && employeeDb != null, course: courseDb, employee: employeeDb);
+        }
+
+        private (bool isExists, DbModel.Employee courseDb) IsExists(int idEmployee)
+        {
+            DbModel.Employee employeeDb = _db.Employees.Get(idEmployee);
+
+            return (isExists: employeeDb != null, employee: employeeDb);
+        }
     }
 }

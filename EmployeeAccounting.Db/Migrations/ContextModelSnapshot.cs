@@ -44,6 +44,9 @@ namespace EmployeeAccounting.Db.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Signature")
                         .HasColumnType("nvarchar(max)");
 
@@ -56,18 +59,21 @@ namespace EmployeeAccounting.Db.Migrations
                         {
                             ID = 1,
                             Duration = 6,
+                            IsDeleted = false,
                             Signature = ".NET"
                         },
                         new
                         {
                             ID = 2,
                             Duration = 6,
+                            IsDeleted = false,
                             Signature = "Java"
                         },
                         new
                         {
                             ID = 3,
                             Duration = 1,
+                            IsDeleted = false,
                             Signature = "SQL"
                         });
                 });

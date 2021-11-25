@@ -14,7 +14,7 @@ namespace EmployeeAccounting.Controllers
             this._ds = ds;
         }
 
-        private ICoreCrud<Department> _ds;
+        private IDepartmentService<Department> _ds;
 
         [HttpGet]
         public async Task<IActionResult> GetDepartments()

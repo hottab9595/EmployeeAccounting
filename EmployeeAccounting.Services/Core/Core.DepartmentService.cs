@@ -64,9 +64,9 @@ namespace EmployeeAccounting.Services.Core
             }
         }
 
-        public Task DeleteAsync(UIModel.Department t)
+        public Task DeleteAsync(UIModel.Department department)
         {
-            throw new System.NotImplementedException();
+            return DeleteAsync(department.ID);
         }
 
         public async Task FullDeleteAsync(int id)

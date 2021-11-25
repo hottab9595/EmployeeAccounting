@@ -7,5 +7,6 @@ namespace EmployeeAccounting.Db.Interfaces
     {
         DbSet<Employee> Employees { get; set; }
         DbSet<Department> Departments { get; set; }
+        DbSet<Course> Courses { get; set; }
     }
 }

@@ -13,7 +13,8 @@ namespace EmployeeAccounting.Db.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Signature = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Duration = table.Column<int>(type: "int", nullable: false)
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,18 +47,18 @@ namespace EmployeeAccounting.Db.Migrations
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "ID", "Duration", "Signature" },
-                values: new object[] { 1, 6, ".NET" });
+                columns: new[] { "ID", "Duration", "IsDeleted", "Signature" },
+                values: new object[] { 1, 6, false, ".NET" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "ID", "Duration", "Signature" },
-                values: new object[] { 2, 6, "Java" });
+                columns: new[] { "ID", "Duration", "IsDeleted", "Signature" },
+                values: new object[] { 2, 6, false, "Java" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "ID", "Duration", "Signature" },
-                values: new object[] { 3, 1, "SQL" });
+                columns: new[] { "ID", "Duration", "IsDeleted", "Signature" },
+                values: new object[] { 3, 1, false, "SQL" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CourseEmployee_EmployeesID",

@@ -13,6 +13,9 @@ namespace EmployeeAccounting.Services
 
             CreateMap<UIModel.Department, DbModel.Department>();
             CreateMap<DbModel.Department, UIModel.Department>();
+
+            CreateMap<UIModel.Course, DbModel.Course>();
+            CreateMap<DbModel.Course, UIModel.Course>();
         }
     }
 }

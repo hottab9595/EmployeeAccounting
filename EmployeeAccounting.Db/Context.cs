@@ -89,21 +89,25 @@ namespace EmployeeAccounting.Db
                 {
                     ID = 1,
                     Signature = ".NET",
-                    Duration = 6
+                    Duration = 6,
+                    IsDeleted = false
                 },
                 new Course
                 {
                     ID = 2,
                     Signature = "Java",
-                    Duration = 6
+                    Duration = 6,
+                    IsDeleted = false,
                 },
                 new Course
                 {
                     ID = 3,
                     Signature = "SQL",
-                    Duration = 1
+                    Duration = 1,
+                    IsDeleted = false,
                 },
             });
+            
         }
     }
 }

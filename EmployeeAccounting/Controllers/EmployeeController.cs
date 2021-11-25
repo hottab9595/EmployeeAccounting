@@ -14,7 +14,7 @@ namespace EmployeeAccounting.Controllers
             this._es = es;
         }
 
-        private ICoreCrud<Employee> _es;
+        private IEmployeeService<Employee> _es;
 
         [HttpGet]
         public async Task<IActionResult> GetEmployees()
@@ -46,6 +46,19 @@ namespace EmployeeAccounting.Controllers
             await _es.DeleteAsync(id);
             return Ok();
         }
+
+        [HttpPut("/{id:int}/AddCourse/{employeeId:int}")]
+        public async Task<IActionResult> AddCourseToEmployee(int id, int employeeId, Course course)
+        {
+            return Ok(await _es.AddEmployeeAsync(id, employeeId));
+        }
+
+        [HttpPut("/{id:int}/RemoveCourse/{employeeId:int}")]
+        public async Task<IActionResult> RemoveCourseFromEmployee(int id, int employeeId, Course course)
+        {
+            return Ok(await _es.RemoveEmployeeAsync(id, employeeId));
+        }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> FullDeleteEmployee(int id)

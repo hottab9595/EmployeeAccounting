@@ -7,6 +7,7 @@ namespace EmployeeAccounting.Db.Interfaces
     {
         IRepository<Employee> Employees { get; }
         IRepository<Department> Departments { get; }
+        IRepository<Course> Courses { get; }
         Task SaveAsync();
     }
 }
