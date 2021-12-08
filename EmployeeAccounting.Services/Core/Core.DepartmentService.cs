@@ -4,6 +4,7 @@ using EmployeeAccounting.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmployeeAccounting.Services.Helpers;
 using DbModel = EmployeeAccounting.Db.Model;
 using UIModel = EmployeeAccounting.UI.Model;
 
@@ -11,12 +12,14 @@ namespace EmployeeAccounting.Services.Core
 {
     public class DepartmentService<T> : CoreService<T>, IDepartmentService<UIModel.Department> where T : UIModel.BaseModel
     {
-        public DepartmentService(IUnitOfWork db, IMapper mapper) : base(db)
+        public DepartmentService(IUnitOfWork db, IMapper mapper, ICheckHelper checkHelper) : base(db)
         {
             this._mapper = mapper;
+            this._checkHelper = checkHelper;
         }
 
         private readonly IMapper _mapper;
+        private readonly ICheckHelper _checkHelper;
 
         #region Interfaces realization
 
@@ -37,18 +40,14 @@ namespace EmployeeAccounting.Services.Core
             {
                 DbModel.Department departmentDb = _db.Departments.Get(id);
 
-                if (departmentDb != null)
-                {
-                    departmentDb.Signature = department.Signature;
-                    departmentDb.ParentID = department.ParentID;
-                    departmentDb.IsDeleted = department.IsDeleted;
+                _checkHelper.CheckDbModelExists(departmentDb);
+                departmentDb.Signature = department.Signature;
+                departmentDb.ParentID = department.ParentID;
+                departmentDb.IsDeleted = department.IsDeleted;
 
-                    _db.Departments.Update(departmentDb);
-                    await _db.SaveAsync();
-                    return _mapper.Map<UIModel.Department>(departmentDb);
-                }
-
-                return department;
+                _db.Departments.Update(departmentDb);
+                await _db.SaveAsync();
+                return _mapper.Map<UIModel.Department>(departmentDb);
             });
         }
 
@@ -56,12 +55,10 @@ namespace EmployeeAccounting.Services.Core
         {
             DbModel.Department departmentDb = _db.Departments.Get(id);
 
-            if (departmentDb != null)
-            {
-                departmentDb.IsDeleted = true;
-                _db.Departments.Update(id);
-                await _db.SaveAsync();
-            }
+            _checkHelper.CheckDbModelExists(departmentDb);
+            departmentDb.IsDeleted = true;
+            _db.Departments.Update(id);
+            await _db.SaveAsync();
         }
 
         public Task DeleteAsync(UIModel.Department department)
@@ -71,11 +68,11 @@ namespace EmployeeAccounting.Services.Core
 
         public async Task FullDeleteAsync(int id)
         {
-            if (_db.Departments.Get(id) != null)
-            {
-                _db.Departments.Delete(id);
-                await _db.SaveAsync();
-            }
+            DbModel.Department departmentDb = _db.Departments.Get(id);
+
+            _checkHelper.CheckDbModelExists(departmentDb);
+            _db.Departments.Delete(id);
+            await _db.SaveAsync();
         }
 
         #endregion

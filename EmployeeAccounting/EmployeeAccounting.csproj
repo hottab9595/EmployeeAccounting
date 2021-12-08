@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmployeeAccounting.Common\EmployeeAccounting.Common.csproj" />
     <ProjectReference Include="..\EmployeeAccounting.Services\EmployeeAccounting.Services.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,8 @@ using EmployeeAccounting.Db;
 using EmployeeAccounting.Db.Core;
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services;
+using EmployeeAccounting.Services.Core;
+using EmployeeAccounting.Services.Helpers;
 using EmployeeAccounting.Services.Interfaces;
 using EmployeeAccounting.UI.Model;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +33,7 @@ namespace EmployeeAccounting
             services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
+            services.AddTransient<ICheckHelper, CheckHelper>();
 
             services.Scan(scan => scan
                 .FromAssemblyOf<ICoreCrud<BaseModel>>()
@@ -56,7 +59,8 @@ namespace EmployeeAccounting
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseMiddleware<ExceptionMiddleware>();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

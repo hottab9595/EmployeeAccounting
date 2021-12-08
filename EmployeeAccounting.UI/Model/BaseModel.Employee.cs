@@ -1,4 +1,6 @@
-﻿namespace EmployeeAccounting.UI.Model
+﻿using System.Collections.Generic;
+
+namespace EmployeeAccounting.UI.Model
 {
     public class Employee : BaseModel
     {
@@ -8,5 +10,6 @@
         public bool IsDeleted { get; set; }
         public int DepartmentID { get; set; }
         public string DepartmentSignature { get; set; }
+        public List<Course> Courses { get; set; } = new List<Course>();
     }
 }

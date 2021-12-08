@@ -2,6 +2,7 @@
 using EmployeeAccounting.Db.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using Castle.Components.DictionaryAdapter;
 
 namespace EmployeeAccounting.Db
 {
@@ -21,6 +22,7 @@ namespace EmployeeAccounting.Db
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<CourseEmployee> CourseEmployees { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder
@@ -29,6 +31,9 @@ namespace EmployeeAccounting.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CourseEmployee>()
+                .HasKey(c => new { c.CourseId, c.EmployeeId });
+
             modelBuilder.Entity<Department>().HasData(new List<Department>
             {
                 new Department
@@ -53,6 +58,7 @@ namespace EmployeeAccounting.Db
                     ParentID = 1
                 }
             });
+
             modelBuilder.Entity<Employee>().HasData(new List<Employee>
             {
                 new Employee
@@ -97,17 +103,29 @@ namespace EmployeeAccounting.Db
                     ID = 2,
                     Signature = "Java",
                     Duration = 6,
-                    IsDeleted = false,
+                    IsDeleted = false
                 },
                 new Course
                 {
                     ID = 3,
                     Signature = "SQL",
                     Duration = 1,
-                    IsDeleted = false,
+                    IsDeleted = false
                 },
             });
-            
+            modelBuilder.Entity<CourseEmployee>().HasData(new List<CourseEmployee>
+            {
+                new CourseEmployee
+                {
+                    CourseId = 1,
+                    EmployeeId = 1
+                },
+                new CourseEmployee
+                {
+                    CourseId = 1,
+                    EmployeeId = 2
+                },
+            });
         }
     }
 }
