@@ -2,6 +2,7 @@
 using EmployeeAccounting.UI.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using EmployeeAccounting.Common.Exceptions;
 
 namespace EmployeeAccounting.Controllers
 {
@@ -47,16 +48,16 @@ namespace EmployeeAccounting.Controllers
             return Ok();
         }
 
-        [HttpPut("/{id:int}/AddCourse/{employeeId:int}")]
-        public async Task<IActionResult> AddCourseToEmployee(int id, int employeeId, Course course)
+        [HttpPut("{id:int}/AddCourse/{courseId:int}")]
+        public async Task<IActionResult> AddCourseToEmployee(int id, int courseId, Course course)
         {
-            return Ok(await _es.AddEmployeeAsync(id, employeeId));
+            return Ok(await _es.AddEmployeeAsync(id, courseId));
         }
 
-        [HttpPut("/{id:int}/RemoveCourse/{employeeId:int}")]
-        public async Task<IActionResult> RemoveCourseFromEmployee(int id, int employeeId, Course course)
+        [HttpPut("{id:int}/RemoveCourse/{courseId:int}")]
+        public async Task<IActionResult> RemoveCourseFromEmployee(int id, int courseId, Course course)
         {
-            return Ok(await _es.RemoveEmployeeAsync(id, employeeId));
+            return Ok(await _es.RemoveEmployeeAsync(id, courseId));
         }
 
 

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmployeeAccounting.Common\EmployeeAccounting.Common.csproj" />
     <ProjectReference Include="..\EmployeeAccounting.Db\EmployeeAccounting.Db.csproj" />
     <ProjectReference Include="..\EmployeeAccounting.UI\EmployeeAccounting.UI.csproj" />
   </ItemGroup>

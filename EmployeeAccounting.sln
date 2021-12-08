@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeAccounting", "Emplo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeAccounting.Db", "EmployeeAccounting.Db\EmployeeAccounting.Db.csproj", "{56A2BEAF-FEF9-41E8-B67A-5593214AFF81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeAccounting.Services", "EmployeeAccounting.Services\EmployeeAccounting.Services.csproj", "{3AC8BC3F-E95B-430A-A9C3-CDB03DE38101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeAccounting.Services", "EmployeeAccounting.Services\EmployeeAccounting.Services.csproj", "{3AC8BC3F-E95B-430A-A9C3-CDB03DE38101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeAccounting.UI", "EmployeeAccounting.UI\EmployeeAccounting.UI.csproj", "{84C1FB27-1CA7-4020-BA8C-E565822DF34D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeAccounting.UI", "EmployeeAccounting.UI\EmployeeAccounting.UI.csproj", "{84C1FB27-1CA7-4020-BA8C-E565822DF34D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeAccounting.Common", "EmployeeAccounting.Common\EmployeeAccounting.Common.csproj", "{8029F9F7-05A4-466E-9A9A-429F3C52193C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{84C1FB27-1CA7-4020-BA8C-E565822DF34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84C1FB27-1CA7-4020-BA8C-E565822DF34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84C1FB27-1CA7-4020-BA8C-E565822DF34D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8029F9F7-05A4-466E-9A9A-429F3C52193C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8029F9F7-05A4-466E-9A9A-429F3C52193C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8029F9F7-05A4-466E-9A9A-429F3C52193C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8029F9F7-05A4-466E-9A9A-429F3C52193C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

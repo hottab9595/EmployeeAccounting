@@ -1,4 +1,5 @@
-﻿using EmployeeAccounting.Db.Interfaces;
+﻿using System;
+using EmployeeAccounting.Db.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -74,6 +75,12 @@ namespace EmployeeAccounting.Db.Core
             {
                 _dbSet.Remove(item);
             }
+        }
+
+        public IQueryable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+        {
+            IQueryable<T> query = _dbSet.Where(predicate);
+            return query;
         }
     }
 }

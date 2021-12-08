@@ -41,13 +41,13 @@ namespace EmployeeAccounting.Controllers
             return Ok(await _cs.UpdateAsync(id, course));
         }
 
-        [HttpPut("/{id:int}/AddEmployee/{employeeId:int}")]
+        [HttpPut("{id:int}/AddEmployee/{employeeId:int}")]
         public async Task<IActionResult> AddEmployeeToCourse(int id, int employeeId)
         {
             return Ok(await _cs.AddEmployeeAsync(id, employeeId));
         }
 
-        [HttpPut("/{id:int}/RemoveEmployee/{employeeId:int}")]
+        [HttpPut("{id:int}/RemoveEmployee/{employeeId:int}")]
         public async Task<IActionResult> RemoveEmployeeFromCourse(int id, int employeeId)
         {
             return Ok(await _cs.RemoveEmployeeAsync(id, employeeId));

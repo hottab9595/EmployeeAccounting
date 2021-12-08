@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace EmployeeAccounting.Db.Interfaces
 {
@@ -13,5 +14,6 @@ namespace EmployeeAccounting.Db.Interfaces
         void Delete();
         void Delete(T entity);
         void Delete(int id);
+        IQueryable<T> FindBy(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
     }
 }
