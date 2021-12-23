@@ -7,12 +7,12 @@ namespace EmployeeAccounting.Db.Core
 {
     public class ContextUnitOfWork : IUnitOfWork
     {
-        private Context _db { get; set; }
+        private Context Db { get; set; }
         private readonly IServiceProvider _serviceProvider;
 
         public ContextUnitOfWork(Context context, IServiceProvider serviceProvider)
         {
-            this._db = context;
+            this.Db = context;
             this._serviceProvider = serviceProvider;
         }
 
@@ -21,7 +21,7 @@ namespace EmployeeAccounting.Db.Core
         public IRepository<Course> Courses => GetRepository<Course>();
         public IRepository<CourseEmployee> CourseEmployees => GetRepository<CourseEmployee>();
 
-        public async Task SaveAsync() => await _db.SaveChangesAsync();
+        public async Task SaveAsync() => await Db.SaveChangesAsync();
 
         private IRepository<T> GetRepository<T>() where T : class
         {

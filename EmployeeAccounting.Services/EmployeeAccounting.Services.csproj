@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
@@ -18,7 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EmployeeAccounting.Common\EmployeeAccounting.Common.csproj" />
     <ProjectReference Include="..\EmployeeAccounting.Db\EmployeeAccounting.Db.csproj" />
-    <ProjectReference Include="..\EmployeeAccounting.UI\EmployeeAccounting.UI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
 namespace EmployeeAccounting.Common.Exceptions
 {
@@ -32,7 +31,18 @@ namespace EmployeeAccounting.Common.Exceptions
             
         }
 
-        private const HttpStatusCode statusCode = HttpStatusCode.NotFound;
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
         private const string message = "Employee not found";
+    }
+
+    public class EmployeeAlreadyExistsException : EmployeeException
+    {
+        public EmployeeAlreadyExistsException() : base(message, statusCode)
+        {
+
+        }
+
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
+        private const string message = "Employee already exists";
     }
 }

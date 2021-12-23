@@ -2,75 +2,57 @@
 using EmployeeAccounting.Db.Interfaces;
 using EmployeeAccounting.Services.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EmployeeAccounting.Services.Helpers;
 using DbModel = EmployeeAccounting.Db.Model;
-using UIModel = EmployeeAccounting.UI.Model;
+using EmployeeAccounting.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAccounting.Services.Core
 {
-    public class DepartmentService<T> : CoreService<T>, IDepartmentService<UIModel.Department> where T : UIModel.BaseModel
+    public class DepartmentService<T> : CoreService<T>, IDepartmentService<Department> where T : BaseModel
     {
-        public DepartmentService(IUnitOfWork db, IMapper mapper, ICheckHelper checkHelper) : base(db)
+        public DepartmentService(IUnitOfWork db, IMapper mapper, IUtils utils) : base(db)
         {
-            this._mapper = mapper;
-            this._checkHelper = checkHelper;
+            _mapper = mapper;
+            _utils = utils;
         }
 
         private readonly IMapper _mapper;
-        private readonly ICheckHelper _checkHelper;
+        private readonly IUtils _utils;
 
         #region Interfaces realization
 
-        public async Task<IEnumerable<UIModel.Department>> GetAsync() => await Task.Run(() => _db.Departments.GetAll().AsEnumerable().Select(_mapper.Map<UIModel.Department>));
+        public async Task<IEnumerable<Department>> GetAsync() => _mapper.Map<List<Department>>(await _db.Departments.FindBy(x => !x.IsDeleted).ToListAsync());
 
-        public async Task<UIModel.Department> GetAsync(int id) => await Task.Run(() => _mapper.Map<UIModel.Department>(_db.Departments.Get(id)));
+        public async Task<Department> GetAsync(int id) => _mapper.Map<Department>((await _utils.IsDepartmentExistsAsync(id)).department);
 
-        public async Task<UIModel.Department> AddNewAsync(UIModel.Department department) => await Task.Run(async () =>
-            {
-                DbModel.Department departmentDb = _db.Departments.Add(_mapper.Map<DbModel.Department>(department));
-                await _db.SaveAsync();
-                return _mapper.Map<UIModel.Department>(departmentDb);
-            });
-
-        public async Task<UIModel.Department> UpdateAsync(int id, UIModel.Department department)
+        public async Task<Department> AddNewAsync(Department department)
         {
-            return await Task.Run(async () =>
-            {
-                DbModel.Department departmentDb = _db.Departments.Get(id);
+            await _utils.IsDepartmentNotExistsAsync(department);
 
-                _checkHelper.CheckDbModelExists(departmentDb);
-                departmentDb.Signature = department.Signature;
-                departmentDb.ParentID = department.ParentID;
-                departmentDb.IsDeleted = department.IsDeleted;
+            DbModel.Department departmentDb = _db.Departments.Add(_mapper.Map<DbModel.Department>(department));
+            await _db.SaveAsync();
+            return _mapper.Map<Department>(departmentDb);
+        }
 
-                _db.Departments.Update(departmentDb);
-                await _db.SaveAsync();
-                return _mapper.Map<UIModel.Department>(departmentDb);
-            });
+        public async Task<Department> UpdateAsync(int id, Department department)
+        {
+            DbModel.Department departmentDb = (await _utils.IsDepartmentExistsAsync(id)).department;
+
+            departmentDb.Signature = department.Signature;
+            departmentDb.ParentId = department.ParentId;
+            departmentDb.IsDeleted = department.IsDeleted;
+
+            _db.Departments.Update(departmentDb);
+            await _db.SaveAsync();
+            return _mapper.Map<Department>(departmentDb);
         }
 
         public async Task DeleteAsync(int id)
         {
-            DbModel.Department departmentDb = _db.Departments.Get(id);
+            await _utils.IsDepartmentExistsAsync(id);
 
-            _checkHelper.CheckDbModelExists(departmentDb);
-            departmentDb.IsDeleted = true;
-            _db.Departments.Update(id);
-            await _db.SaveAsync();
-        }
-
-        public Task DeleteAsync(UIModel.Department department)
-        {
-            return DeleteAsync(department.ID);
-        }
-
-        public async Task FullDeleteAsync(int id)
-        {
-            DbModel.Department departmentDb = _db.Departments.Get(id);
-
-            _checkHelper.CheckDbModelExists(departmentDb);
             _db.Departments.Delete(id);
             await _db.SaveAsync();
         }

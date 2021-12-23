@@ -31,7 +31,18 @@ namespace EmployeeAccounting.Common.Exceptions
 
         }
 
-        private const HttpStatusCode statusCode = HttpStatusCode.NotFound;
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
         private const string message = "Department not found";
+    }
+
+    public class DepartmentAlreadyExistsException : EmployeeException
+    {
+        public DepartmentAlreadyExistsException() : base(message, statusCode)
+        {
+
+        }
+
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
+        private const string message = "Department already exists";
     }
 }

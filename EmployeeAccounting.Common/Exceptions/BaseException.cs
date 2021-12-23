@@ -7,8 +7,8 @@ namespace EmployeeAccounting.Common.Exceptions
     {
         protected BaseException(string message, HttpStatusCode httpStatusCode) : base(message)
         {
-            this.Message = message;
-            this.HttpStatusCode = httpStatusCode;
+            Message = message;
+            HttpStatusCode = httpStatusCode;
         }
 
         public override string Message { get; }

@@ -1,69 +1,54 @@
 ﻿using System.Collections.Generic;
+using EmployeeAccounting.Services.Interfaces;
+using SmCourse = EmployeeAccounting.Services.Models.Course;
+using EmployeeAccounting.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using EmployeeAccounting.Services.Interfaces;
-using EmployeeAccounting.UI.Model;
+using AutoMapper;
 
 namespace EmployeeAccounting.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Course")]
     public class CourseController : Controller
     {
-        public CourseController(ICourseService<Course> cs)
+        public CourseController(ICourseService<SmCourse> cs, IMapper mapper)
         {
-            this._cs = cs;
+            _cs = cs;
+            _mapper = mapper;
         }
 
-        private ICourseService<Course> _cs;
+        private readonly ICourseService<SmCourse> _cs;
+        private readonly IMapper _mapper;
 
         [HttpGet]
         public async Task<IActionResult> GetCourses()
         {
-            return Ok(await _cs.GetAsync());
+            return Ok(_mapper.Map<List<Course>>(await _cs.GetAsync()));
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetSpecificCourse(int id)
         {
-            return Ok(await _cs.GetAsync(id));
+            return Ok(_mapper.Map<Course>(await _cs.GetAsync(id)));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddNewCourse(Course course)
         {
-            return Ok(await _cs.AddNewAsync(course));
+            return Ok(await _cs.AddNewAsync(_mapper.Map<SmCourse>(course)));
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateCourse(int id, Course course)
         {
-            return Ok(await _cs.UpdateAsync(id, course));
-        }
-
-        [HttpPut("{id:int}/AddEmployee/{employeeId:int}")]
-        public async Task<IActionResult> AddEmployeeToCourse(int id, int employeeId)
-        {
-            return Ok(await _cs.AddEmployeeAsync(id, employeeId));
-        }
-
-        [HttpPut("{id:int}/RemoveEmployee/{employeeId:int}")]
-        public async Task<IActionResult> RemoveEmployeeFromCourse(int id, int employeeId)
-        {
-            return Ok(await _cs.RemoveEmployeeAsync(id, employeeId));
-        }
-
-        [HttpPut("Delete/{id:int}")]
-        public async Task<IActionResult> DeleteCourse(int id)
-        {
-            await _cs.DeleteAsync(id);
-            return Ok();
+            return Ok(await _cs.UpdateAsync(id, _mapper.Map<SmCourse>(course)));
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> FullDeleteCourse(int id)
         {
-            await _cs.FullDeleteAsync(id);
+            await _cs.DeleteAsync(id);
             return Ok();
         }
     }

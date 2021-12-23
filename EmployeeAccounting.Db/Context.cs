@@ -2,13 +2,11 @@
 using EmployeeAccounting.Db.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using Castle.Components.DictionaryAdapter;
 
 namespace EmployeeAccounting.Db
 {
     public class Context : DbContext, IContext
     {
-
         public Context()
         {
 
@@ -28,34 +26,30 @@ namespace EmployeeAccounting.Db
             optionsBuilder
                 .UseLazyLoadingProxies();
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseEmployee>()
-                .HasKey(c => new { c.CourseId, c.EmployeeId });
-
             modelBuilder.Entity<Department>().HasData(new List<Department>
             {
                 new Department
                 {
-                    ID = 1,
+                    Id = 1,
                     Signature = "Developers",
                     IsDeleted = false,
-                    ParentID = null
+                    ParentId = null
                 },
                 new Department
                 {
-                    ID = 2,
+                    Id = 2,
                     Signature = "Administration",
                     IsDeleted = false,
-                    ParentID = null
+                    ParentId = null
                 },
                 new Department
                 {
-                    ID = 3,
+                    Id = 3,
                     Signature = "HR department",
                     IsDeleted = false,
-                    ParentID = 1
+                    ParentId = 1
                 }
             });
 
@@ -63,65 +57,69 @@ namespace EmployeeAccounting.Db
             {
                 new Employee
                 {
-                    ID = 1,
+                    Id = 1,
                     Surname = "Koshel",
                     Name = "Egor",
                     Patronymic = "Viktotovich",
                     IsDeleted = false,
-                    DepartmentID = 1
+                    DepartmentId = 1
                 },
                 new Employee
                 {
-                    ID = 2,
+                    Id = 2,
                     Surname = "TestSurname",
                     Name = "TestName",
                     Patronymic = "TestPatronymic",
                     IsDeleted = false,
-                    DepartmentID = 2
+                    DepartmentId = 2
                 },
                 new Employee
                 {
-                    ID = 3,
+                    Id = 3,
                     Surname = "TestSurname1",
                     Name = "TestName1",
                     Patronymic = "TestPatronymic1",
                     IsDeleted = false,
-                    DepartmentID = 3
+                    DepartmentId = 3
                 }
             });
+
             modelBuilder.Entity<Course>().HasData(new List<Course>
             {
                 new Course
                 {
-                    ID = 1,
+                    Id = 1,
                     Signature = ".NET",
                     Duration = 6,
                     IsDeleted = false
                 },
                 new Course
                 {
-                    ID = 2,
+                    Id = 2,
                     Signature = "Java",
                     Duration = 6,
                     IsDeleted = false
                 },
                 new Course
                 {
-                    ID = 3,
+                    Id = 3,
                     Signature = "SQL",
                     Duration = 1,
                     IsDeleted = false
                 },
             });
+
             modelBuilder.Entity<CourseEmployee>().HasData(new List<CourseEmployee>
             {
                 new CourseEmployee
                 {
+                    Id = 1,
                     CourseId = 1,
                     EmployeeId = 1
                 },
                 new CourseEmployee
                 {
+                    Id = 2,
                     CourseId = 1,
                     EmployeeId = 2
                 },

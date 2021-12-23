@@ -31,7 +31,18 @@ namespace EmployeeAccounting.Common.Exceptions
 
         }
 
-        private const HttpStatusCode statusCode = HttpStatusCode.NotFound;
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
         private const string message = "Course not found";
+    }
+
+    public class CourseAlreadyExistsException : EmployeeException
+    {
+        public CourseAlreadyExistsException() : base(message, statusCode)
+        {
+
+        }
+
+        private const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
+        private const string message = "Course already exists";
     }
 }

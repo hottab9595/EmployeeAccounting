@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EmployeeAccounting.Db.Core
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class 
     {
         private readonly DbSet<T> _dbSet;
 
@@ -18,12 +18,6 @@ namespace EmployeeAccounting.Db.Core
         {
             return _dbSet.AsQueryable();
         }
-
-        public IQueryable<T> Get()
-        {
-            return _dbSet.AsQueryable();
-        }
-
 
         public T Get(int id)
         {

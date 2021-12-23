@@ -30,7 +30,7 @@ namespace EmployeeAccounting.Services.Core
                 }
                 else
                 {
-                    await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
+                    await HandleExceptionAsync(httpContext, ex, HttpStatusCode.InternalServerError);
                 }
             }
         }

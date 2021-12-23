@@ -1,5 +1,5 @@
 ﻿using EmployeeAccounting.Db.Interfaces;
-using EmployeeAccounting.UI.Model;
+using EmployeeAccounting.Services.Models;
 
 namespace EmployeeAccounting.Services.Core
 {
@@ -8,7 +8,7 @@ namespace EmployeeAccounting.Services.Core
         protected IUnitOfWork _db;
         public CoreService(IUnitOfWork db)
         {
-            this._db = db;
+            _db = db;
         }
     }
 }

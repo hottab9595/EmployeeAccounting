@@ -2,11 +2,10 @@ using AutoMapper;
 using EmployeeAccounting.Db;
 using EmployeeAccounting.Db.Core;
 using EmployeeAccounting.Db.Interfaces;
-using EmployeeAccounting.Services;
 using EmployeeAccounting.Services.Core;
 using EmployeeAccounting.Services.Helpers;
 using EmployeeAccounting.Services.Interfaces;
-using EmployeeAccounting.UI.Model;
+using EmployeeAccounting.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,17 +22,16 @@ namespace EmployeeAccounting
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddTransient<IContext, Context>();
-            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
+            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUnitOfWork, ContextUnitOfWork>();
-            services.AddTransient<ICheckHelper, CheckHelper>();
 
             services.Scan(scan => scan
                 .FromAssemblyOf<ICoreCrud<BaseModel>>()
@@ -42,9 +40,12 @@ namespace EmployeeAccounting
                 .WithScopedLifetime()
             );
 
+            services.AddTransient<IUtils, Utils>();
+
             services.AddSingleton(new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
+                mc.AddProfile(new Services.MappingProfile());
             }).CreateMapper());
         }
 

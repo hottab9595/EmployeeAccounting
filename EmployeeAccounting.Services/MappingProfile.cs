@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using EmployeeAccounting.Services.Models;
 using DbModel = EmployeeAccounting.Db.Model;
-using UIModel = EmployeeAccounting.UI.Model;
 
 namespace EmployeeAccounting.Services
 {
@@ -8,14 +8,17 @@ namespace EmployeeAccounting.Services
     {
         public MappingProfile()
         {
-            CreateMap<UIModel.Employee, DbModel.Employee>();
-            CreateMap<DbModel.Employee, UIModel.Employee>();
+            CreateMap<Employee, DbModel.Employee>();
+            CreateMap<DbModel.Employee, Employee>();
 
-            CreateMap<UIModel.Department, DbModel.Department>();
-            CreateMap<DbModel.Department, UIModel.Department>();
+            CreateMap<Department, DbModel.Department>();
+            CreateMap<DbModel.Department, Department>();
 
-            CreateMap<UIModel.Course, DbModel.Course>();
-            CreateMap<DbModel.Course, UIModel.Course>();
+            CreateMap<Course, DbModel.Course>();
+            CreateMap<DbModel.Course, Course>();
+
+            CreateMap<Membership, DbModel.CourseEmployee>();
+            CreateMap<DbModel.CourseEmployee, Membership>();
         }
     }
 }
